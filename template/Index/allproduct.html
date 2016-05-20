@@ -1,0 +1,132 @@
+{include file='Index/include/header.html'}
+        <div class="main" style="background-color:#F5F5F5">
+            <div class="filter-box">
+                    <div class="filter js-cates">
+                        {if !empty($search)}
+                        <div class="filter">
+                            <a href="{U('index/allproduct')}">全部搜索结果</a>
+                        </div>
+                        {/if}
+                        <span class="hint">分类:</span>
+                        <select id="input-class_id">
+                            <option value="">全部商品</option>
+                        {foreach from=$classifyList item=v}
+                            <option value="{$v.id}" {if $v.id==$class_id} selected="selected" {/if}>{$v.name}</option>
+                        {/foreach}
+                        </select>
+                    </div>
+                    <div class="filter js-sort last">
+                        <span class="hint">排序:</span>
+                        <a data-sort="0" {if $order_price!='asc' && $order_price!='desc' } class="active" {/if} href="{U('index/allproduct/class_id/'|cat:{$class_id}|cat:'/search/'|cat:{$search})}">默认</a>
+                        {if $order_price=='asc' }
+                        <a class="active" href="{U('index/allproduct/class_id/'|cat:{$class_id}|cat:'/price/desc/is_stock/'|cat:{$is_stock}|cat:'/search/'|cat:{$search})}">价格↑</a>
+                        {elseif $order_price=='desc'}
+                        <a class="active" href="{U('index/allproduct/class_id/'|cat:{$class_id}|cat:'/price/asc/is_stock/'|cat:{$is_stock}|cat:'/search/'|cat:{$search})}">价格↓</a>
+                        {else}
+                        <a href="{U('index/allproduct/class_id/'|cat:{$class_id}|cat:'/price/asc/is_stock/'|cat:{$is_stock}|cat:'/search/'|cat:{$search})}">价格</a>
+                        {/if}
+                        <span class="filter-chkbox">
+                            <label><input type="checkbox" id="is-stock" {if $is_stock==1} checked="checked" {/if}> 仅看有货产品</label>
+                        </span>
+                    </div>
+            </div>
+            <div class="contentwrap">
+                <ul class="allproduct">
+                    {if empty($search) && count($goodsList)==0}
+                        <div style="height:320px;line-height:250px;font-size: 48px;text-align:center">商城暂无商品</div>
+                    {/if}
+                    {if !empty($search) && count($goodsList)==0}
+                        <div style="height:320px;line-height:250px;font-size: 48px;text-align:center">无搜索结果</div>
+                    {else}
+                    {foreach from=$goodsList item=v}
+                    <li>
+                        <a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank">
+                            <div class="image"><img src="{$v.iname}" alt=""></div>
+                            <div class="gname">{$v.gname}</div>
+                            <div class="price">{$v.price}</div>
+                        </a>
+                        {if $loginInfo.loginstatus==0}
+                        <div class="link"><a href="javascript:void(0);" onclick="userFrame('login','show')">加入购物车</a></div>
+                        {else}
+                            {if $v.stock==0}
+                        <div class="link">
+                            <div class="over">已售完</div>
+                        </div>
+                            {else}
+                        <div class="link"><a href="javascript:void(0);" target="_blank" onclick="addCart({$v.id},1);location.href='{U('index/shopcart')}'">加入购物车</a></div>
+                            {/if}
+                        {/if}
+                    </li>
+                    {/foreach}
+                    {/if}
+                </ul>
+            </div>
+
+            
+                <div class="footer-navbar">
+                    <div class="contentwrap">
+                        <div class="nav-info">
+                            &nbsp;&nbsp;共{$pageInfo.pageCount}页，当前第{$pageInfo.page}页，本页显示{$pageInfo.rows}条记录，共{$pageInfo.total}条记录
+                        </div>
+                        <div class="nav-number">
+                            <!-- 有数据的情况 -->
+                            {if $pageInfo.total!=0}
+                            <!-- <hr> -->
+                            <nav>
+                                <ul class="pagination pull-left">
+                                    <li>
+                                        <a href="{U('index/allproduct/class_id/'|cat:{$class_id}|cat:'/price/'|cat:{$order_price}|cat:'/is_stock/'|cat:{$is_stock}|cat:'/search/'|cat:{$search}|cat:'/page/1')}" aria-label="Previous">首页</a>
+                                    </li>
+                                    <li>
+                                        <a href="{U('index/allproduct/class_id/'|cat:{$class_id}|cat:'/price/'|cat:{$order_price}|cat:'/is_stock/'|cat:{$is_stock}|cat:'/search/'|cat:{$search}|cat:'/page/')}{$pageInfo.page-1}" aria-label="Previous">上一页
+                                        </a>
+                                    </li>
+                                    {if $pageInfo.startBanner=='...'}
+                                        <li><a href="javascript:void(0);">...</a></li>
+                                    {/if}
+                                {section name=total loop=$pageInfo.pageCount}
+                                    {if $smarty.section.total.index+1==$pageInfo.page }
+                                        <li class="active"><a href="javascript:void(0);">{$smarty.section.total.index+1}</a></li>
+                                    {else}
+                                        {if (($smarty.section.total.index+1>=$pageInfo.start) && ($smarty.section.total.index+1<=$pageInfo.end))}
+                                            <li><a href="{U('index/allproduct/class_id/'|cat:{$class_id}|cat:'/price/'|cat:{$order_price}|cat:'/is_stock/'|cat:{$is_stock}|cat:'/search/'|cat:{$search}|cat:'/page/')}{$smarty.section.total.index+1}">{$smarty.section.total.index+1}</a></li>
+                                        {/if}
+                                    {/if}
+                                {/section}
+                                    {if $pageInfo.endBanner=='...'}
+                                        <li><a href="javascript:void(0);">...</a></li>
+                                    {/if}
+                                    <li>
+                                        <a href="{U('index/allproduct/class_id/'|cat:{$class_id}|cat:'/price/'|cat:{$order_price}|cat:'/is_stock/'|cat:{$is_stock}|cat:'/search/'|cat:{$search}|cat:'/page/')}{$pageInfo.page+1}" aria-label="Next">下一页</a>
+                                    </li>
+                                    <li>
+                                        <a href="{U('index/allproduct/class_id/'|cat:{$class_id}|cat:'/price/'|cat:{$order_price}|cat:'/is_stock/'|cat:{$is_stock}|cat:'/search/'|cat:{$search}|cat:'/page/')}{$pageInfo.pageCount}" aria-label="Next">尾页</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            {/if}<!-- 有数据的情况 END -->
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+        </div>
+
+        <script type="text/javascript">
+            <!--
+            $(document).ready( function () {
+                //分类下拉菜单
+                $("#input-class_id").change(function(){
+                    location.href="{U('index/allproduct/class_id/')}"+this.value;
+                });
+
+
+                $("#is-stock").click(function(){
+                    if($(this).prop('checked')==true){
+                        location.href="{U('index/allproduct/class_id/'|cat:{$class_id}|cat:'/is_stock/1'|cat:'/search/'|cat:{$search})}";
+                    }else{
+                        location.href="{U('index/allproduct/class_id/'|cat:{$class_id}|cat:'/is_stock/0'|cat:'/search/'|cat:{$search})}";
+                    }
+                });
+            });
+        </script>
+{include file='Index/include/footer.html'}

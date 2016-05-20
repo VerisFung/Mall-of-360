@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+        <title>360商城后台管理系统</title>
+        <!-- Bootstrap -->
+        <link href="{TPL_PATH}/Admin/css/{$siteInfo.skin}.bootstrap.min.css" rel="stylesheet">
+        <link href="{TPL_PATH}/Admin/css/admin.css" rel="stylesheet">
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="{TPL_PATH}/Admin/js/html5shiv.min.js"></script>
+            <script src="{TPL_PATH}/Admin/js/respond.min.js"></script>
+        <![endif]-->
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="{TPL_PATH}/Admin/js/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="{TPL_PATH}/Admin/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <!-- 头部导航 -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
+            <div class="container-fluid">
+                <div class="navbar-header">
+                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                      </button>
+                    <a class="navbar-brand" href="#">360商城后台管理系统</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">首页</span></a></li>
+                        <!-- <li><a href="#">API接口</a></li> -->
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{$loginInfo.username}<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <!-- <li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 个性设置</a></li> -->
+                                <!-- <li><a href="#"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 修改密码</a></li> -->
+                                <!-- <li role="separator" class="divider"></li> -->
+                                <li><a href="{U('admin/logout')}"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> 注销</a></li>
+                            </ul>
+                        </li>
+                        <!-- <li><a href="#">站内消息 <span class="badge">42</span></a></li> -->
+                        <!-- <li><a href="#">版权信息</a></li> -->
+                        <li><a href="{U('Index/index')}" target="_blank">前台首页</a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div>
+        </nav>
+        <!-- 头部导航END -->

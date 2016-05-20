@@ -1,0 +1,350 @@
+{include file="Admin/include/header.html"}
+{include file="Admin/include/sidebar.html"}
+        
+        {literal}
+        <!-- ECharts单文件引入 -->
+        <script src="../echarts/build/dist/echarts.js"></script>
+        <script type="text/javascript">
+            // 路径配置
+            require.config({
+                paths: {
+                    echarts: '../echarts/build/dist'
+                }
+            });
+            
+            // 使用
+            require(
+                [
+                    'echarts',
+                    'echarts/chart/line',
+                    'echarts/chart/bar',
+                    'echarts/chart/pie',
+                    'echarts/chart/funnel',
+                ],
+                function (ec) {
+                    // 基于准备好的dom，初始化echarts图表
+                    var myChart = ec.init(document.getElementById('echarts-1')); 
+                    var myChart2 = ec.init(document.getElementById('echarts-2')); 
+                    var myChart3 = ec.init(document.getElementById('echarts-3')); 
+                    var myChart4 = ec.init(document.getElementById('echarts-4')); 
+                    
+                    option = {
+                        title : {
+                            text: '商品数据统计图',
+                            subtext: 'Product data charts'
+                        },
+                        tooltip : {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:['销量','浏览量']
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+        {/literal}
+                        calculable : true,
+                        xAxis : [
+                            {
+                                type : 'category',
+                                boundaryGap : false,
+                                data : [{$classCountData.class_name}]
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value'
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'销量',
+                                type:'line',
+                                smooth:true,
+        {literal}
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+        {/literal}
+                                data:[{$classCountData.sale}]
+                            },
+                            {
+                                name:'浏览量',
+                                type:'line',
+                                smooth:true,
+        {literal}
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+        {/literal}
+                                data:[{$classCountData.views}]
+                            }
+                        ]
+                    };
+                                        
+
+
+
+        {literal}
+                    option2 = {
+                        title : {
+                            text: '商品分类统计图',
+                            subtext: 'Categories Chart',
+                            x:'left'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+        {/literal}
+                        // legend: {
+                        //     orient : 'vertical',
+                        //     x : 'left',
+                        //     data:[{$classCountData.class_name}]
+                        // },
+        {literal}
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {
+                                    show: true, 
+                                    type: ['pie', 'funnel'],
+                                    option: {
+                                        funnel: {
+                                            x: '25%',
+                                            width: '50%',
+                                            funnelAlign: 'left',
+                                            max: 1548
+                                        }
+                                    }
+                                },
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        series : [
+        {/literal}
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                radius : '55%',
+                                center: ['50%', '60%'],
+                                data:[
+                                    {foreach from=$classCount item=v}
+        {literal}
+                                    {
+        {/literal}
+                                        value:{$v.total}, 
+                                        name:'{$v.class_name}'
+        {literal}
+                                    },
+        {/literal}
+                                    {/foreach}
+                                ]
+                            }
+                        ]
+                    };
+                                        
+
+
+
+        {literal}
+                    option3 = {
+                        title : {
+                            text: '商品订单状态统计图',
+                            subtext: 'Categories Chart',
+                            x:'left'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        // legend: {
+                        //     orient : 'vertical',
+                        //     x : 'left',
+                        //     data:['未发货','已发货','已完成','已失效']
+                        // },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                magicType : {
+                                    show: true, 
+                                    type: ['pie', 'funnel'],
+                                    option: {
+                                        funnel: {
+                                            x: '25%',
+                                            width: '50%',
+                                            funnelAlign: 'left',
+                                            max: 1548
+                                        }
+                                    }
+                                },
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        calculable : true,
+                        series : [
+        {/literal}
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                radius : '55%',
+                                center: ['50%', '60%'],
+                                data:[
+        {literal}
+                                    {
+        {/literal}
+                                        value:{$orderStatus[0]}, 
+                                        name:'未发货'
+        {literal}
+                                    },
+        {/literal}
+        {literal}
+                                    {
+        {/literal}
+                                        value:{$orderStatus[1]}, 
+                                        name:'已发货'
+        {literal}
+                                    },
+        {/literal}
+        {literal}
+                                    {
+        {/literal}
+                                        value:{$orderStatus[2]}, 
+                                        name:'已完成'
+        {literal}
+                                    },
+        {/literal}
+        {literal}
+                                    {
+        {/literal}
+                                        value:{$orderStatus[3]}, 
+                                        name:'已失效'
+        {literal}
+                                    },
+        {/literal}
+                                ]
+                            }
+                        ]
+                    };
+
+
+        {literal}
+                    option4 = {
+                        title: {
+                            x: 'center',
+                            text: '360商城数据统计图',
+                            subtext: '360 store data charts',
+                        },
+                        tooltip: {
+                            trigger: 'item'
+                        },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                dataView: {show: true, readOnly: false},
+                                restore: {show: true},
+                                saveAsImage: {show: true}
+                            }
+                        },
+                        calculable: true,
+                        grid: {
+                            borderWidth: 0,
+                            y: 80,
+                            y2: 60
+                        },
+                        xAxis: [
+                            {
+                                type: 'category',
+                                show: false,
+                                data: ['昨日订单', '今日订单', '昨日销售额', '今日销售额']
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value',
+                                show: false
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '360商城数据统计图',
+                                type: 'bar',
+                                itemStyle: {
+                                    normal: {
+                                        color: function(params) {
+                                            // build a color map as your need.
+                                            var colorList = [
+                                              '#26C0C0','#B5C334','#D1AE1C','#E87C25','#26C0C0',
+                                               '#FE8463','#9BCA63'
+                                            ];
+                                            return colorList[params.dataIndex]
+                                        },
+                                        label: {
+                                            show: true,
+                                            position: 'top',
+                                            formatter: '{b}\n{c}'
+                                        }
+                                    }
+                                },        
+        {/literal}
+                                data: [{$siteData.order1},{$siteData.order2},{$siteData.price1},{$siteData.price2}],
+                            }
+                        ]
+                    };
+                                
+
+                    // 为echarts对象加载数据 
+                    myChart.setOption(option); 
+                    myChart2.setOption(option2); 
+                    myChart3.setOption(option3); 
+                    myChart4.setOption(option4); 
+                }
+            );
+        </script>
+        <div class="container maincontent">
+            <div class="row">
+                【{$adminInfo.role_name}】{$adminInfo.username}，您好，欢迎登陆{$siteInfo.sitetitle}后台！
+                <hr>
+                <div class="col-md-10">                
+                    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                    <div id="echarts-4" style="height:450px"></div>
+                </div>
+                <div class="col-md-2">   
+                    <ul class="nav nav-pills" role="tablist" style="margin-bottom:20px;">
+                      <li role="presentation" class="active"><a href="#">注册用户数 <span class="badge">{$siteData.user}</span></a></li>
+                    </ul>
+                    <ul class="nav nav-pills" role="tablist" style="margin-bottom:20px;">
+                      <li role="presentation" class="active"><a href="#">总订单数 <span class="badge">{$siteData.order}</span></a></li>
+                    </ul>
+                    <ul class="nav nav-pills" role="tablist" style="margin-bottom:20px;">
+                      <li role="presentation" class="active"><a href="#">总销售额 <span class="badge">{$siteData.price}</span></a></li>
+                    </ul>
+                    <ul class="nav nav-pills" role="tablist" style="margin-bottom:20px;">
+                      <li role="presentation" class="active"><a href="#">总商品数 <span class="badge">{$siteData.goods}</span></a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6">                
+                    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                    <div id="echarts-2" style="height:450px"></div>
+                </div>
+                <div class="col-md-6">                
+                    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                    <div id="echarts-3" style="height:450px"></div>
+                </div>
+                <div class="col-md-12">                
+                    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                    <div id="echarts-1" style="height:450px"></div>
+                </div>
+            </div>
+        </div>
+{include file="Admin/include/footer.html"}

@@ -1,0 +1,61 @@
+{include file="Admin/include/header.html"}
+{include file="Admin/include/sidebar.html"}
+        <div class="container-fluid maincontent">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <!-- 有数据的情况 -->
+                                                <table class="table table-striped table-condensed table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width:20px" >#</th>
+                                                            <th style="width:300px" >商品名称</th>
+                                                            <th style="width:40px">头像</th>
+                                                            <th style="width:40px">ID</th>
+                                                            <th style="width:70px">姓名</th>
+                                                            <th>评论</th>
+                                                            <th style="width:180px">发表时间</th>
+                                                            <th style="width:100px">操作</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {foreach from=$commentList item=v}
+                                                        <tr style="height:50px">
+                                                            <td>{$v.id}</td>
+                                                            <td><a href="{U('index/product/id/'|cat:{$v.goods_id})}" target="_blank">{$v.goods_name}</a></td>
+                                                            <td><img width="64px" src="{$v.avatar}" alt=""></td>
+                                                            <td>{$v.user_id}</td>
+                                                            <td>{$v.true_name}</td>
+                                                            <td>{$v.msg}</td>
+                                                            <td>{date('Y-m-d H:i:s',$v.uptime)}</td>
+                                                            <td><button type="button" onclick="delComment({$v.id})" class="btn btn-danger">删除</button></td>
+                                                        </tr>
+                                                    {/foreach}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                    </div>
+                </div>
+            </div>
+        <script type="text/javascript">
+            <!--
+            function delComment(id){
+                $.ajax({
+                url: "{U('Admin/comment/action/del')}",
+                type: 'GET',
+                data:'id='+id,
+                dataType: 'html',
+                timeout: 1000,
+                success: function(html){
+                    location.reload();
+                }
+                });
+            }
+            //-->
+        </script>
+{include file="Admin/include/footer.html"}

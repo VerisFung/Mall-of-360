@@ -1,0 +1,139 @@
+{include file='Index/include/header.html'}
+<script type="text/javascript">
+    window.onload=function(){
+        $('.bottom img:eq(0)').attr('class','cur');
+        $('#img-big').attr('src',$('.bottom img:eq(0)').attr('src').replace('64_',''));
+    }
+    function changeBigImg(obj){
+        document.getElementById('img-big').src=obj.src.replace('64_','');
+        $('.bottom img').attr('class','');
+        obj.setAttribute('class','cur');
+    }
+</script>
+        <div class="main">
+            <div class="contentwrap">
+                <ol class="breadcrumb">
+                  <li><a href="{U('index/allproduct')}">全部分类</a></li>
+                  {foreach from=$classifyClanInfo key=k item=v}
+                  <li><a href="{U('index/allproduct/class_id/'|cat:{$k})}">{$v}</a></li>
+                  {/foreach}
+                  <li class="active">{$goodsInfo.gname}</li>
+                  <span style="float:right;color:#333">浏览数：{$views}</span>
+                </ol>
+                {if $goodsInfo.status==0}
+                    <div style="width:100%;height:200px;text-align: center;line-height: 200px;color:#89D92B"><h1>该商品已下架</h1></div>
+                {else}
+                <div class="picbox">
+                    <div class="top">
+                        <img id="img-big" src="">
+                    </div>
+                    <div class="bottom">
+                    {foreach from=$goodsImageInfo item=v}
+                        <img src="{$v.iname}" onmouseover="changeBigImg(this)">
+                    {/foreach}
+                    </div>
+                </div>
+                <div class="mainbox">
+                    <span class="title">{$goodsInfo.gname}</span>
+                    <span class="desc">{strip_tags($goodsInfo.description)}</span>
+                    <span class="price">￥ {$goodsInfo.price}</span>
+                    <!-- <p>分类&nbsp;&nbsp;&nbsp;&nbsp;<a class="check">套装版</a>&nbsp;&nbsp;<a class="checkbox">尊享版</a></p> -->
+                    <p><span style="float:left">数量：&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+                        <div class="gcIpt">
+                            <a href="javascript:void(0);" class="decrement" data-num="-1">-</a>
+                            <input type="text" class="goodsCount" value="1">
+                            <a href="javascript:void(0);" class="increment" data-num="1">+</a>
+                        </div>
+                    <p>购买可获积分：&nbsp;&nbsp;&nbsp;&nbsp;<font color="#333">{$goodsInfo.point}</font></p>
+                    <p>库存：&nbsp;&nbsp;&nbsp;&nbsp;<font color="#333">{$goodsInfo.stock}</font></p>
+                    <p>销量：&nbsp;&nbsp;&nbsp;&nbsp;<font color="#333">{$goodsInfo.sale}</font></p>
+                    {if $goodsInfo.stock>0}
+                        {if $loginInfo.loginstatus==0}
+                        <a class="addcart" href="javascript:void(0)" onclick="userFrame('login','show')"><span class="icon"></span>加入购物车</a>
+                        {else}
+                        <a class="addcart" href="javascript:void(0)" onclick="addCart({$goodsInfo.id},$('.goodsCount').val());location.href='{U('index/shopcart')}'"><span class="icon"></span>加入购物车</a>
+                        {/if}
+                    {else}
+                        <a class="addcart" style="background: #999;"><span class="icon"></span>已售完</a>
+                    {/if}
+                    <a href="javascript:void(0);" id="zan" class="love">{$goodsInfo.zan}</a>
+                </div>
+                <div class="clear"></div>
+                <div class="imgcon">
+                    {$goodsInfo.content}
+                </div>
+                {/if}
+                <a name="msg"></a>
+                <h2 style="margin:20px 0;">买家评论：</h2>
+                {if count($msgList)==0}
+                    <h1 style="text-align: center">暂无买家评论</h1>
+                {else}
+                    {foreach from=$msgList item=v}
+                    <div class="message">
+                        <table border="0" cellspacing="0" cellpadding="0" width=100%>
+                            <tr>
+                                <td rowspan="2" width="100px"><img style="width:64px;height:64px;" class="tx" src="{$v.avatar}" alt="" /></td>
+                                <td width="50px"><b>{mb_substr($v.true_name,0,1)}**</b></td>
+                                <td style="color:#666">{date("Y-m-d H:i:s",$v.uptime)}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" valign="top">{$v.msg}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    {/foreach}
+                {/if}
+
+                {if $loginInfo.loginstatus==1 && $relation==true}
+                <form action="" method="POST">
+                    评论内容：<br />
+                    <textarea name="msg" cols="100" rows="10" style="border:2px solid #ddd;outline:none;font-size:16px;width:100%"></textarea>
+                    <input type="button" id="submit-comment" value="发表评论" style="cursor:pointer;border:none; padding:10px 20px;background-color: #15AE2F;color:white;float:right"/>
+                </form>
+                {/if}
+                <div class="clear"></div>
+
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready( function () {
+                $("#submit-comment").click(function(){
+                    $.ajax({
+                    url: "{U('Index/product/action/addmsg/id/'|cat:{$goodsInfo.id})}",
+                    type: 'POST',
+                    data:'msg='+$('textarea').val(),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        location.reload();
+                    }
+                    });
+                });
+                $("#zan").click(function(){
+                    $.ajax({
+                    url: "{U('Index/zan')}",
+                    type: 'GET',
+                    data:'id={$goodsInfo.id}',
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        $("#zan").html($("#zan").html()*1+1);
+                    }
+                    });
+                });
+                $(".decrement").click(function(){
+                    $(".goodsCount").val($(".goodsCount").val()*1-1);
+                    if($(".goodsCount").val()<1){
+                        $(".goodsCount").val(1);
+                    }
+                });
+                $(".increment").click(function(){
+                    $(".goodsCount").val($(".goodsCount").val()*1+1);
+                    if($(".goodsCount").val()>{$goodsInfo.stock}){
+                        $(".goodsCount").val({$goodsInfo.stock});
+                        alert('已达到最大购买数量！');
+                    }
+                });
+            });
+        </script>
+{include file='Index/include/footer.html'}

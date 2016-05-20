@@ -1,0 +1,218 @@
+{include file='Index/include/header.html'}
+    <form action="{U('index/order/action/submit')}" method="POST">
+        <div class="main">
+            <div class="contentwrap">
+                <div class="title">收货地址 <span style="color:red;font-size:14px;">温馨提示：为了保证您的权益，防止黄牛倒卖，订单进入正在配货状态将不能修改收货地址和发票信息！</span></div>
+                <div class="con">
+                    姓名：<input type="text" name="oname" id="" value="{$userInfo.true_name}" required/>
+                    手机：<input type="text" name="phone" id="" value="{$userInfo.telephone}" required/>
+                    地区：
+                    <select id="formGroupInputProvince">
+                        <option value="0">请选择</option>
+                    </select>
+                    <input type="hidden" id="input-province" name="province" value=""/>
+                    <select id="formGroupInputCity" name="city">
+                        <option value="0">请选择</option>
+                    </select>
+                    <input type="hidden" id="input-city" name="city" value=""/>
+                    <select id="formGroupInputArea" name="area">
+                        <option value="0">请选择</option>
+                    </select>
+                    <input type="hidden" id="input-area" name="area" value=""/>
+                    地址：<input type="text" name="address" id="" value="{$userInfo.address}" required/>
+                    
+                    <!-- <a href="#" class="newadd"></a> -->
+                </div>
+                <div class="con" style="margin-top:20px;">
+                    <span><b>支付方式</b></span>
+                    <div class="split"></div>
+                    <input type="radio" name="" id="" checked/>在线支付
+                </div>
+                <div class="con" style="margin-top:20px;">
+                    <span><b>配送方式</b></span>
+                    <div class="split"></div>
+                    <input type="radio" name="" id="" checked />免费配送
+                </div>
+                <div class="con" style="margin-top:20px;">
+                    <span><b>发票信息</b></span>
+                    <div class="split"></div>
+                    <input type="radio" name="" id="" checked />不开发票
+                    <input type="radio" name="" id="" />普通发票
+                </div>
+                <div class="con" style="margin-top:20px;">
+                    <span><b>商品清单</b></span>
+                    <div class="split"></div>
+                    <div class="hd">
+                        <div class="col1">商品信息</div>
+                        <div class="col2">单价</div>
+                        <div class="col3">数量</div>
+                        <div class="col4">合计</div>
+                    </div>
+                    <div class="bd">
+                        <div class="wrap_row">
+                            {foreach from=$cartList key=k item=v}
+                            <div class="row">
+                                <div class="r1">
+                                    <a href="{U('index/product/id/'|cat:{$k})}" target="_blank"><img class="item-img" src="{$v.image}"></a>
+                                    <a href="{U('index/product/id/'|cat:{$k})}" target="_blank"><span class="item-name">{$v.gname}</span></a>
+                                </div>
+                                <div class="r2"><span>{$v.price}</span>元</div>
+                                <div class="r3">
+                                        x{$v.num}
+                                </div>
+                                <div class="r4"><span>{$v.price*$v.num}</span>元</div>
+                            </div>
+                            {/foreach}
+                        </div>
+                    </div>
+                    <div class="pay"> 商品总计：<span></span>元</div>
+                    <input type="hidden" id="allprice" name="allprice" value=""/>
+                    <div class="split"></div>
+                    <!-- <p align="right">寄送至：{$userInfo.address}</p> -->
+                    <!-- <p align="right">{$userInfo.true_name} (收件人) {$userInfo.telephone}</p> -->
+                    <br>
+                    <div class="btn">
+                        <button type="submit" style="cursor: pointer" class="b2">立即下单</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        <script type="text/javascript">
+
+
+
+                var str='{$userInfo.area}';
+                arr=str.split(',');
+                province =arr[0];
+                city     =arr[1];
+                area     =arr[2];
+                if(province!=0 && city!=0 && area!=0){
+                    $.ajax({
+                    url: "{U('Api/getareas')}",
+                    type: 'GET',
+                    data:'areas_id=0',
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        data=JSON.parse(html);
+                        $.each(data, function(value,name){     
+                            if(value==province){
+                                $('#formGroupInputProvince').append("<option value='"+value+"' selected='selected'>"+name+"</option>");
+                                $("#input-province").val(name);
+                            } else{
+                                $('#formGroupInputProvince').append("<option value='"+value+"'>"+name+"</option>");
+                            }
+                        });   
+                    }
+                    });
+
+                    $.ajax({
+                    url: "{U('Api/getareas')}",
+                    type: 'GET',
+                    data:'areas_id='+province,
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        data=JSON.parse(html);
+                        $.each(data, function(value,name){     
+                            if(value==city){
+                                $('#formGroupInputCity').append("<option value='"+value+"' selected='selected'>"+name+"</option>");
+                                $("#input-city").val(name);
+                            } else{
+                                $('#formGroupInputCity').append("<option value='"+value+"'>"+name+"</option>");
+                            }
+                        });   
+                    }
+                    });
+
+                    $.ajax({
+                    url: "{U('Api/getareas')}",
+                    type: 'GET',
+                    data:'areas_id='+city,
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        data=JSON.parse(html);
+                        $.each(data, function(value,name){     
+                            if(value==area){
+                                $('#formGroupInputArea').append("<option value='"+value+"' selected='selected'>"+name+"</option>");
+                                $("#input-area").val(name);
+                            } else{
+                                $('#formGroupInputArea').append("<option value='"+value+"'>"+name+"</option>");
+                            }
+                        });   
+                    }
+                    });
+                }else{
+                    $.ajax({
+                    url: "{U('Api/getareas')}",
+                    type: 'GET',
+                    data:'areas_id=0',
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        data=JSON.parse(html);
+                        $.each(data, function(value,name){     
+                            $('#formGroupInputProvince').append("<option value='"+value+"'>"+name+"</option>");
+                        });   
+                    }
+                    });
+                }
+
+            <!--
+            $(document).ready( function () {
+
+                $('#formGroupInputProvince').change(function(){
+                    $("#input-province").val($('#formGroupInputProvince').find("option:selected").text());
+                    $.ajax({
+                    url: "{U('Api/getareas')}",
+                    type: 'GET',
+                    data:'areas_id='+$(this).val(),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        $('#formGroupInputCity').html('<option value="0">请选择</option>');
+                        $('#formGroupInputArea').html('<option value="0">请选择</option>');
+                        data=JSON.parse(html);
+                        $.each(data, function(value,name){    
+                            $('#formGroupInputCity').append("<option value='"+value+"'>"+name+"</option>"); 
+                        });   
+                    }
+                    });
+                });
+                $('#formGroupInputCity').change(function(){
+                    $("#input-city").val($('#formGroupInputCity').find("option:selected").text());
+                    $.ajax({
+                    url: "{U('Api/getareas')}",
+                    type: 'GET',
+                    data:'areas_id='+$(this).val(),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        $('#formGroupInputArea').html('<option value="0">请选择</option>');
+                        data=JSON.parse(html);
+                        $.each(data, function(value,name){      
+                            $('#formGroupInputArea').append("<option value='"+value+"'>"+name+"</option>");
+                        });   
+                    }
+                    });
+                });
+                $('#formGroupInputArea').change(function(){
+                    $("#input-area").val($('#formGroupInputArea').find("option:selected").text());
+                });
+
+                cartSum();
+                function cartSum(){
+                    sum=0;
+                    count=$(".r4 span").length;
+                    for(i=0;i<count;i++){
+                        sum+=$(".r4 span:eq("+i+")").html()*1;
+                    }
+                    $(".pay span").html(sum);
+                    $("#allprice").val(sum);
+                }
+            });
+        </script>
+
+{include file='Index/include/footer.html'}

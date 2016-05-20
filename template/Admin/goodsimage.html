@@ -1,0 +1,122 @@
+{include file="Admin/include/header.html"}
+{include file="Admin/include/sidebar.html"}
+        <div class="container maincontent">
+            <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <a href="{U('Admin/goods/page/'|cat:{$page})}" class="btn btn-default" style="margin-bottom:10px" ><span class="glyphicon glyphicon-menu-left"></span> 返回</a>
+
+                            <div class="row">
+                              <div class="col-md-12">
+                                <p style="font-size:18px">您正在管理的商品是:<label class="label label-default">{$goods_name}</label></p>
+                                <hr>
+                                <form action="{U('Admin/goods/action/uploadgoodsimage/page/'|cat:{$page}|cat:'/id/'|cat:{$goods_id})}" method="POST" enctype="multipart/form-data">
+                                    <input class="btn btn-success" style="display:none" id="file" type="file" name="file[]" multiple>
+                                    <input class="btn btn-warning" type="button" onclick="file.click()" value="添加图片">
+                                    <input class="btn btn-success" type="submit" value="上传">
+                                    {if count($imageInfo)>1 }
+                                    <a class="btn btn-primary" id="checkAllImage"><span class="glyphicon glyphicon-unchecked"></span> 全选</a>
+                                    <a class="btn btn-danger" id="delAllImage"><span class="glyphicon glyphicon-trash"></span> 批量删除</a>
+                                    {else}
+                                    <a class="btn btn-primary disabled" id="checkAllImage"><span class="glyphicon glyphicon-unchecked"></span> 全选</a>
+                                    <a class="btn btn-danger disabled" id="delAllImage"><span class="glyphicon glyphicon-trash"></span> 批量删除</a>
+                                    {/if}
+                                </form>
+
+                              </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                            {foreach from=$imageInfo item=v}
+                              <div class="col-sm-6 col-md-3 div-{$v.id}">
+                                <div class="thumbnail">
+                                  <img src="{$v.iname}" style="width:253px;height:253px;">
+                                  <div class="caption">
+                                    <h4>ID:{$v.id}&nbsp;&nbsp;&nbsp;{if $v.cover==1}<label class="label label-success">是封面</label>{else}<label class="label label-danger">非封面</label>{/if}</h4>
+                                    <p>
+                                    {if $v.cover==1}
+                                        <a href="#" class="btn btn-primary disabled" role="button">设为封面</a>
+                                        <a href="#" class="btn btn-danger disabled" role="button">删除</a>
+                                    {else}
+                                        <input type="checkbox" name="checklist[]" image-id="{$v.id}" />
+                                        <a href="javascript:void(0);" image-id="{$v.id}" class="btn btn-primary btn-setCover" role="button">设为封面</a>
+                                        <a href="javascript:void(0);" image-id="{$v.id}" class="btn btn-danger btn-delImage" role="button">删除</a>
+                                    {/if}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            {/foreach}
+                            </div>
+
+
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            <!--
+            $(document).ready( function () {
+                //设置封面
+                $(".btn-setCover").click(function(){
+                    $.ajax({
+                    url: "{U('admin/goods/action/setcover')}",
+                    type: 'GET',
+                    data:'id='+$(this).attr("image-id"),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        location.reload();
+                    }
+                    });
+                });
+
+                //删除图片
+                $(".btn-delImage").click(function(){
+                    if(confirm("确定要删除这张图片吗？")){
+                        $(".div-"+$(this).attr("image-id")).fadeOut();
+                        $.ajax({
+                        url: "{U('admin/goods/action/delgoodsimage')}",
+                        type: 'GET',
+                        data:'id='+$(this).attr("image-id"),
+                        dataType: 'html',
+                        timeout: 1000,
+                        });
+                    }
+                });
+
+                //批量删除图片
+                $("#delAllImage").click(function(){
+                    if(confirm("确定要删除这些图片吗？")){
+                        for(i=0;i<$("input[type='checkbox']").length;i++){
+                            if($("input[type='checkbox']:eq("+i+")").prop("checked")==true){
+                                $(".div-"+$("input[type='checkbox']:eq("+i+")").attr("image-id")).fadeOut();
+                                $.ajax({
+                                url: "{U('admin/goods/action/delgoodsimage')}",
+                                type: 'GET',
+                                data:'id='+$("input[type='checkbox']:eq("+i+")").attr("image-id"),
+                                dataType: 'html',
+                                timeout: 1000,
+                                });
+                            }
+                        }
+                        // location.reload();
+                    }
+                });
+
+                //全选or反选
+                $("#checkAllImage").click(function(){
+                    if($("#checkAllImage").prop("checked") == true){
+                        $("#checkAllImage").prop("checked", false);
+                        $("#checkAllImage span").attr("class", "glyphicon glyphicon-unchecked");
+                        $("input[type='checkbox']").prop("checked", false);
+                    }else{
+                        $("#checkAllImage").prop("checked", true);
+                        $("#checkAllImage span").attr("class", "glyphicon glyphicon-check");
+                        $("input[type='checkbox']").prop("checked", true);
+                    }
+                });
+            });
+        </script>
+{include file="Admin/include/footer.html"}

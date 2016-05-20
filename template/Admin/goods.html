@@ -1,0 +1,442 @@
+{include file="Admin/include/header.html"}
+{include file="Admin/include/sidebar.html"}
+<!-- 增加用户框 -->
+<div class="modal fade" id="collectionModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">采集入库</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="input-class_id" class="control-label">商品分类:</label>
+            <select name="form-control" id="input-class_id" class="normal">
+            {foreach from=$classifyList item=v}
+                <option value='{$v.id}'>{$v.name}</option>
+            {/foreach}
+            </select>
+            <label><a href="{U('admin/classify')}" target="_blank">添加分类</a></label>
+          </div>
+          <div class="form-group">
+            <label for="input-item_id" class="control-label">360商品ID:</label>
+            <input type="text" class="form-control" id="input-item_id">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-success" id="btn-collection">开始采集</button>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="container-fluid maincontent">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <a class="btn btn-info" href="{U('admin/goods/action/addgoods/page/'|cat:{$pageInfo.page})}"><span class="glyphicon glyphicon-plus"></span> 添加商品</a>
+                                                <a class="btn btn-warning" data-toggle="modal" data-target="#collectionModal"><span class="glyphicon glyphicon-cloud-download"></span> 采集</a>
+                                                {if count($goodsList)>0 }
+                                                <a class="btn btn-primary" id="checkAllGoods"><span class="glyphicon glyphicon-unchecked"></span> 全选</a>
+                                                <a class="btn btn-danger" id="delAllGoods"><span class="glyphicon glyphicon-trash"></span> 批量删除</a>
+                                                {else}
+                                                <a class="btn btn-primary disabled" id="checkAllGoods"><span class="glyphicon glyphicon-unchecked"></span> 全选</a>
+                                                <a class="btn btn-danger disabled" id="delAllGoods"><span class="glyphicon glyphicon-trash"></span> 批量删除</a>
+                                                {/if}
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="col-md-12 control-input">
+                                                    <select class="form-control" id="searchClass">
+                                                        <option value="">全部分类</option>
+                                                        {foreach from=$classifyList item=v}
+                                                            <option value='{$v.id}' {if $pageInfo.search=='class_id' && $v.id==$pageInfo.keywords}selected="selected"{/if} >{$v.name}</option>
+                                                        {/foreach}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="col-md-2 control-input">
+                                                    {if $pageInfo.search!='' && $pageInfo.keywords!=''}
+                                                    <a class="btn btn-default" href="{U('admin/goods/page/1')}"><span class="glyphicon glyphicon-refresh"></span> 清空</a>
+                                                    {/if}
+                                                </div>
+                                                <div class="col-md-4 control-input">
+                                                    <select class="form-control" id="search">
+                                                        <option value="gname"{if $pageInfo.search=='gname'}selected="selected"{/if}>商品名称</option>
+                                                        <option value="id"{if $pageInfo.search=='id'}selected="selected"{/if}>ID</option>
+                                                        <option value="price"{if $pageInfo.search=='price'}selected="selected"{/if}>单价</option>
+                                                        <option value="point"{if $pageInfo.search=='point'}selected="selected"{/if}>积分</option>
+                                                        <option value="stock"{if $pageInfo.search=='stock'}selected="selected"{/if}>库存</option>
+                                                        <option value="sale"{if $pageInfo.search=='sale'}selected="selected"{/if}>销量</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 control-input">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" placeholder="搜索您想要的..." name="search" id="input-search" value="{if $pageInfo.search!='class_id' && $pageInfo.search!='order'}{$pageInfo.keywords}{/if}">
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-default" type="button" id="btn-search"><i class="glyphicon glyphicon-search"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <!-- 没有搜索,没有数据的情况 -->
+                                                {if $pageInfo.search=='' && $pageInfo.keywords=='' && $pageInfo.total==0}
+                                                    <div id="tip" class="alert alert-warning alert-dismissible">暂无商品数据</div>
+                                                {/if}
+                                                <!-- 有搜索,没有数据的情况 -->
+                                                {if $pageInfo.search!='' && $pageInfo.keywords!='' && $pageInfo.total==0}
+
+                                                    {if $pageInfo.search != 'class_id' && $pageInfo.search!='order'}
+                                                        <div id="tip" class="alert alert-warning alert-dismissible">暂无<strong>
+                                                        {if $pageInfo.search == 'id'}
+                                                        ID
+                                                        {elseif $pageInfo.search == 'gname'}
+                                                        商品名称
+                                                        {elseif $pageInfo.search == 'price'}
+                                                        单价
+                                                        {elseif $pageInfo.search == 'point'}
+                                                        积分
+                                                        {elseif $pageInfo.search == 'stock'}
+                                                        库存
+                                                        {elseif $pageInfo.search == 'sale'}
+                                                        销量
+                                                        {/if}
+                                                        </strong>为<strong> {$pageInfo.keywords} </strong>的数据</div>
+                                                    {elseif $pageInfo.search=='order'}
+                                                        {if $pageInfo.keywords == 'down'}
+                                                        <div id="tip" class="alert alert-warning alert-dismissible">暂无下架数据<strong>
+                                                        {elseif $pageInfo.keywords == 'up'}
+                                                        <div id="tip" class="alert alert-warning alert-dismissible">暂无上架数据<strong>
+                                                        {/if}
+                                                    {else}
+                                                        <div id="tip" class="alert alert-warning alert-dismissible">暂无该分类数据<strong>
+                                                    {/if}
+                                                {/if}
+                                                <!-- 有数据的情况 -->
+                                                {if $pageInfo.total!=0}
+                                                <table class="table table-striped table-condensed table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width:20px" >#</th>
+                                                            <th style="width:40px">ID</th>
+                                                            <th>封面</th>
+                                                            <th style="width:200px">商品名称</th>
+                                                            <th style="width:100px" >商品分类</th>
+                                                            <th>单价</th>
+                                                            <th>积分</th>
+                                                            <th>库存</th>
+                                                            <th>销量</th>
+                                                            <th>是否新品</th>
+                                                            <th>是否热销</th>
+                                                            <th>状态</th>
+                                                            <th>赞</th>
+                                                            <th>操作</th>
+                                                            <th>
+                                                                <select class="form-control" id="searchOrder">
+                                                                    <option value="idd"{if $pageInfo.search=='order' && $pageInfo.keywords=='idd'}selected="selected"{/if}>按新商品降序 ∨</option>
+                                                                    <option value="ida"{if $pageInfo.search=='order' && $pageInfo.keywords=='ida'}selected="selected"{/if}>按新商品升序 ∧</option>
+                                                                    <option value="up"{if $pageInfo.search=='order' && $pageInfo.keywords=='up'}selected="selected"{/if}>搜上架商品</option>
+                                                                    <option value="down"{if $pageInfo.search=='order' && $pageInfo.keywords=='down'}selected="selected"{/if}>搜下架商品</option>
+                                                                </select>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {foreach from=$goodsList item=v}
+                                                        <tr style="height:50px">
+                                                            <td style="height:64px;"><input type="checkbox" name="checklist[]" /></td>
+                                                            <td>{$v.id}</td>
+                                                            <td><img src="{$v.image}" alt=""></td>
+                                                            <td>{$v.gname}</td>
+                                                            <td>{$v.class_name}</td>
+                                                            <td>{$v.price}</td>
+                                                            <td>{$v.point}</td>
+                                                            <td>{$v.stock}</td>
+                                                            <td>{$v.sale}</td>
+                                                            <td>
+                                                            {if $v.isnew==1 }
+                                                            <a href="javascript:void(0);" class="isnew isnew-yes"><span class="text-success glyphicon glyphicon-ok"></span></a>
+                                                            {else}
+                                                            <a href="javascript:void(0);" class="isnew isnew-no"><span class="text-danger glyphicon glyphicon-remove"></span></a>
+                                                            {/if}
+                                                            </td>
+                                                            <td>
+                                                            {if $v.ishot==1 }
+                                                            <a href="javascript:void(0);" class="ishot ishot-yes"><span class="text-success glyphicon glyphicon-ok"></span></a>
+                                                            {else}
+                                                            <a href="javascript:void(0);" class="ishot ishot-no"><span class="text-danger glyphicon glyphicon-remove"></span></a>
+                                                            {/if}
+                                                            </td>
+                                                            <td>
+                                                            {if $v.status==1}
+                                                            <a href="javascript:void(0);" class="status status-up"><span class="text-success glyphicon glyphicon-open"></span></a>
+                                                            {else}
+                                                            <a href="javascript:void(0);" class="status status-down"><span class="text-danger glyphicon glyphicon-save"></span></a>
+                                                            {/if}
+                                                            </td>
+                                                            <td>{$v.zan}</td>
+                                                            <td style="width:316px" colspan="2">
+                                                                <a class="btn btn-sm btn-primary" href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> 详情</a>
+                                                                <a class="btn btn-sm btn-success" href="{U('admin/goods/page/'|cat:{$pageInfo.page}|cat:'/action/editgoods/id/'|cat:{$v.id})}"><span class="glyphicon glyphicon-edit"></span> 编辑</a>
+                                                                <a class="btn btn-sm btn-warning" href="{U('admin/goods/action/goodsimage/page/'|cat:{$page}|cat:'/id/'|cat:{$v.id})}" ><span class="glyphicon glyphicon-picture"></span> 图片管理</a>
+                                                                <a class="btn btn-sm btn-danger btn-delGoods" href="javascript:void(0);" ><span class="glyphicon glyphicon-remove"></span> 删除</a>
+                                                            </td>
+                                                        </tr>
+                                                    {/foreach}
+                                                {/if}
+                                                    </tbody>
+                                                </table>
+                                                <!-- 有数据的情况 -->
+                                                {if $pageInfo.total!=0}
+                                                <hr>
+                                                共{$pageInfo.pageCount}页，当前第{$pageInfo.page}页，本页显示{$pageInfo.rows}条记录，共{$pageInfo.total}条记录
+                                                <nav>
+                                                    <ul class="pagination pull-left">
+                                                        <li>
+                                                            <a href="{U('admin/goods/page/1')}&search={$pageInfo.search}&keywords={$pageInfo.keywords}" aria-label="Previous"> <span class="glyphicon glyphicon-step-backward"></span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{U('admin/goods/page/')}{$pageInfo.page-1}&search={$pageInfo.search}&keywords={$pageInfo.keywords}" aria-label="Previous"> <span class="glyphicon glyphicon-chevron-left"></span>
+                                                            </a>
+                                                        </li>
+                                                        {if $pageInfo.startBanner=='...'}
+                                                            <li><a href="javascript:void(0);">...</a></li>
+                                                        {/if}
+                                                    {section name=total loop=$pageInfo.pageCount}
+                                                        {if $smarty.section.total.index+1==$pageInfo.page }
+                                                            <li class="active"><a href="javascript:void(0);">{$smarty.section.total.index+1}</a></li>
+                                                        {else}
+                                                            {if (($smarty.section.total.index+1>=$pageInfo.start) && ($smarty.section.total.index+1<=$pageInfo.end))}
+                                                                <li><a href="{U('admin/goods/page/')}{$smarty.section.total.index+1}&search={$pageInfo.search}&keywords={$pageInfo.keywords}">{$smarty.section.total.index+1}</a></li>
+                                                            {/if}
+                                                        {/if}
+                                                    {/section}
+                                                        {if $pageInfo.endBanner=='...'}
+                                                            <li><a href="javascript:void(0);">...</a></li>
+                                                        {/if}
+                                                        <li>
+                                                            <a href="{U('admin/goods/page/')}{$pageInfo.page+1}&search={$pageInfo.search}&keywords={$pageInfo.keywords}" aria-label="Next"> <span class="glyphicon glyphicon-chevron-right"></span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{U('admin/goods/page/')}{$pageInfo.pageCount}&search={$pageInfo.search}&keywords={$pageInfo.keywords}" aria-label="Next"> <span class="glyphicon glyphicon-step-forward"></span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="col-md-2 pull-left" style="margin:20px 0;">
+                                                        <select class="form-control" id="select-gotoPage">
+                                                        {section name=total loop=$pageInfo.pageCount}
+                                                            {if $smarty.section.total.index+1==$pageInfo.page}
+                                                                <option value="{$smarty.section.total.index+1}" selected="selected">{$smarty.section.total.index+1}</option>
+                                                            {else}
+                                                                <option value="{$smarty.section.total.index+1}">{$smarty.section.total.index+1}</option>
+                                                            {/if}
+                                                        {/section}
+                                                        </select>
+                                                    </div>
+                                                    <button type="button" class="btn btn-default" style="margin:20px 0;" id="btn-gotoPage">走你</button>
+                                                </nav>
+                                                {/if}<!-- 有数据的情况 END -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                    </div>
+                </div>
+            </div>
+        <script type="text/javascript">
+            <!--
+            $(document).ready( function () {
+                //searchOrder
+                $("#searchOrder").change(function(){
+                    location.href="{U('admin/goods/page/1')}"+'&search=order&keywords='+this.value;
+                });
+                //分类下拉菜单
+                $("#searchClass").change(function(){
+                    location.href="{U('admin/goods/page/1')}"+'&search=class_id&keywords='+this.value;
+                });
+                //搜索
+                $("#btn-search").click(function(){
+                    location.href="{U('admin/goods/page/1')}"+'&search='+$("#search").val()+'&keywords='+$("#input-search").val();
+                });
+                //搜索框回车
+                $("#input-search").keydown(function(event){
+                    if(event.keyCode ==13){
+                        $("#btn-search").trigger("click");
+                    }
+                });
+                //搜索框点击选中文字
+                $("#input-search").click(function(){
+                    $(this).select();
+                });
+
+                //走你
+                $("#btn-gotoPage").click(function(){
+                    location.href="{U('admin/goods/page/')}"+$("#select-gotoPage").val()+'&search='+$("#search").val()+'&keywords='+$("#input-search").val();
+                });
+
+
+                //用户全选or反选
+                $("#checkAllGoods").click(function(){
+                    if($("#checkAllGoods").prop("checked") == true){
+                        $("#checkAllGoods").prop("checked", false);
+                        $("#checkAllGoods span").attr("class", "glyphicon glyphicon-unchecked");
+                        $("input[type='checkbox']").prop("checked", false);
+                    }else{
+                        $("#checkAllGoods").prop("checked", true);
+                        $("#checkAllGoods span").attr("class", "glyphicon glyphicon-check");
+                        $("input[type='checkbox']").prop("checked", true);
+                    }
+                });
+
+                //采集
+                $("#btn-collection").click(function(){
+                    $(this).html('正在采集');
+                    $(this).attr('class','btn btn-success disabled');
+                    $.ajax({
+                    url: "{U('Admin/goods/action/collection')}",
+                    type: 'GET',
+                    data:'class_id='+$('#input-class_id').val()+
+                         '&item_id='+$('#input-item_id').val(),
+                    dataType: 'html',
+                    timeout: 10000,
+                    success: function(html){
+                        // alert(html);
+                        alert('采集成功!');
+                        location.href="{U('Admin/goods/page/1')}";
+                    }
+                    });
+                });
+                //=============商品===============
+
+                //删除商品
+                $("tbody .btn-delGoods").click(function(){
+                    if(confirm("确定要删除这条商品吗？")){
+                        $("tbody tr:eq("+$(".btn-delGoods").index($(this))+")").fadeOut();
+                        $.ajax({
+                        url: "{U('Admin/goods/action/delgoods')}",
+                        type: 'GET',
+                        data:'id='+$("tbody tr:eq("+$(".btn-delGoods").index($(this))+") td:eq(1)").html(),
+                        dataType: 'html',
+                        timeout: 1000,
+                        success: function(html){
+                            location.reload();
+                        }
+                        });
+                    }
+                });
+
+                //批量删除商品
+                $("#delAllGoods").click(function(){
+                    if(confirm("确定要删除这些商品吗？")){
+                        for(i=0;i<$("input[type='checkbox']").length;i++){
+                            if($("input[type='checkbox']:eq("+i+")").prop("checked")==true){
+                                $.ajax({
+                                url: "{U('Admin/goods/action/delgoods')}",
+                                type: 'GET',
+                                data:'id='+$("tbody tr:eq("+i+") td:eq(1)").html(),
+                                dataType: 'html',
+                                timeout: 1000,
+                                });
+                            }
+                        }
+                        setTimeout(function(){
+                            location.reload();
+                        }, 100);
+                    }
+                });
+
+
+                // 开启
+                $(".isnew-no").click(function(){
+                    $.ajax({
+                    url: "{U('Admin/goods/action/isnew')}",
+                    type: 'GET',
+                    data:'status=1&goodsid='+$("tbody tr:eq("+$(".isnew").index($(this))+") td:eq(1)").html(),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        location.reload();
+                    }
+                    });
+                });
+                // 关闭
+                $(".isnew-yes").click(function(){
+                    $.ajax({
+                    url: "{U('Admin/goods/action/isnew')}",
+                    type: 'GET',
+                    data:'status=0&goodsid='+$("tbody tr:eq("+$(".isnew").index($(this))+") td:eq(1)").html(),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        location.reload();
+                    }
+                    });
+                });
+                // 开启
+                $(".ishot-no").click(function(){
+                    $.ajax({
+                    url: "{U('Admin/goods/action/ishot')}",
+                    type: 'GET',
+                    data:'status=1&goodsid='+$("tbody tr:eq("+$(".ishot").index($(this))+") td:eq(1)").html(),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        location.reload();
+                    }
+                    });
+                });
+                // 关闭
+                $(".ishot-yes").click(function(){
+                    $.ajax({
+                    url: "{U('Admin/goods/action/ishot')}",
+                    type: 'GET',
+                    data:'status=0&goodsid='+$("tbody tr:eq("+$(".ishot").index($(this))+") td:eq(1)").html(),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        location.reload();
+                    }
+                    });
+                });
+
+                // 开启
+                $(".status-down").click(function(){
+                    $.ajax({
+                    url: "{U('Admin/goods/action/status')}",
+                    type: 'GET',
+                    data:'status=1&goodsid='+$("tbody tr:eq("+$(".status").index($(this))+") td:eq(1)").html(),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        location.reload();
+                    }
+                    });
+                });
+                // 关闭
+                $(".status-up").click(function(){
+                    $.ajax({
+                    url: "{U('Admin/goods/action/status')}",
+                    type: 'GET',
+                    data:'status=0&goodsid='+$("tbody tr:eq("+$(".status").index($(this))+") td:eq(1)").html(),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        location.reload();
+                    }
+                    });
+                });
+
+            });
+            //-->
+        </script>
+{include file="Admin/include/footer.html"}

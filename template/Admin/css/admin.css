@@ -1,0 +1,133 @@
+body{
+    margin-left:150px;
+    margin-top: 72px;
+    margin-bottom: 20px;
+    font-family: 'consolas','microsoft Yahei';
+    font-size:16px;
+}
+a{
+    font-family: 'microsoft Yahei';
+    font-size:16px;
+    color:#777;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+    vertical-align: middle;
+}
+.modal-title{
+    font-family: 'microsoft Yahei';
+    color:#333;
+    font-weight: bold;
+}
+.table{
+    font-size: 14px;
+    margin-bottom:0;
+}
+table thead{
+    font-family: 'microsoft Yahei';
+    font-size:16px;
+    color:#333;
+}
+.spiderStatus{
+    display:inline-block;
+    width:20px;
+    height:20px;
+    border-radius: 10px;
+    border: 3px solid #fff;
+    box-shadow: 0px 1px 1px #ddd;
+    background-color: #F05256;
+}
+.spiderStatus-active{
+    background-color: #89D92B;
+}
+
+.badge{
+    background-color: #89D92B;
+}
+
+/*成功提示框*/
+.alert-success{
+    border: none;
+}
+#saveOk{
+    display:none;
+    overflow:hidden;
+    background-color: #FeFeFe;
+    border: 1px solid #89D92B;
+    color:#89D92B;
+    height:50px;
+    padding:15px;
+    padding-right: 35px;
+    margin-bottom:20px;
+}
+
+#saveError{
+    display:none;
+    overflow:hidden;
+    background-color: #FeFeFe;
+    border: 1px solid #FF8181;;
+    color:#FF8181;
+    height:50px;
+    padding:15px;
+    padding-right: 35px;
+    margin-bottom:20px;
+}
+
+.sidebar{
+    width:150px;
+    position:fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background-color: #fafafa;
+    border-right: 1px solid #eee;
+}
+.sidebar .nav-sidebar{
+    margin-right: -21px;
+    margin-bottom: 20px;
+    margin-left: -20px;
+    border-radius:0;
+}
+.sidebar .nav>li>a{
+    transition: all .5s;
+}
+.sidebar .nav>li>a:hover{
+    color: #777;
+    background-color: #eee;
+    padding-left:40px;
+}
+
+.sidebar .nav>li.active>a{
+    transition: none;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0px 0px 1px #777;
+    background-color: #89D92B;
+    padding-left:40px;
+}
+.sidebar .nav>li.active>a:hover{
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0px 0px 1px #777;
+    padding-left:40px;
+    background-color: #89D92B;
+}
+.maincontent .tab-pane{
+    padding:20px 10px;
+    /*border: 1px solid #ddd;*/
+    border-top:none;
+}
+.maincontent .tab-pane .control-label{
+    color:#777;
+    font-weight: normal;
+    text-align:right;
+    font-size: 16px;
+    font-family: 'microsoft Yahei';
+}
+.maincontent .tab-pane .control-input{
+    padding-left: 0px;
+}

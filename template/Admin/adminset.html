@@ -1,0 +1,130 @@
+{include file="Admin/include/header.html"}
+{include file="Admin/include/sidebar.html"}
+
+<!-- 添加一级分类 -->
+<div class="modal fade" id="addAdminModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">添加管理员</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="input-username" class="control-label">用户名:</label>
+            <input type="text" class="form-control" id="input-username">
+          </div>
+          <div class="form-group">
+            <label for="input-password" class="control-label">密码:</label>
+            <input type="password" class="form-control" id="input-password">
+          </div>
+          <div class="form-group">
+            <label for="input-email" class="control-label">邮箱:</label>
+            <input type="email" class="form-control" id="input-email">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="btn-addAdminClose">关闭</button>
+        <button type="button" class="btn btn-success" id="btn-addAdmin">添加</button>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="container-fluid maincontent">
+          <div class="row">
+              <div class="col-md-12">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            {if $adminInfo.level!=255}
+                              <div class="alert alert-warning" role="alert">您是普通管理员没有权限添加或删除其他管理员</div>
+                            {else}
+                              <a class="btn btn-info" data-toggle="modal" data-target="#addAdminModal"><span class="glyphicon glyphicon-plus"></span> 添加管理员</a>
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <table class="table table-striped table-condensed table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width:40px">ID</th>
+                                        <th style="width:160px">用户名</th>
+                                        <th>email</th>
+                                        <th>上一次登录时间</th>
+                                        <th>上一次登录IP</th>
+                                        <th>角色</th>
+                                        <th style="width:100px">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {foreach from=$adminList item=v}
+                                    <tr>
+                                        <td>{$v.id}</td>
+                                        <td>{$v.username}</td>
+                                        <td>{$v.email}</td>
+                                        <td>{date('Y-m-d H:i:s',$v.last_time)}</td>
+                                        <td>
+                                          {if $v.last_ip=='::1'}
+                                            127.0.0.1
+                                          {else}
+                                            $v.last_ip
+                                          {/if}
+                                        </td>
+                                        <td>{$v.role_name}</td>
+                                        <td>
+                                            {if $v.id==$adminInfo.id || $adminInfo.level!=255 || $v.role_level==255}
+                                            <a class="btn btn-sm btn-danger btn-delAdmin disabled" href="javascript:void(0);" admin-id="{$v.id}"><span class="glyphicon glyphicon-remove"></span> 删除</a>
+                                            {else}
+                                            <a class="btn btn-sm btn-danger btn-delAdmin" href="javascript:void(0);" admin-id="{$v.id}"><span class="glyphicon glyphicon-remove"></span> 删除</a>
+                                            {/if}
+                                        </td>
+                                    </tr>
+                                {/foreach}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+        <script type="text/javascript">
+            <!--
+            $(document).ready( function () {
+                //添加管理员
+                $("#btn-addAdmin").click(function(){
+                    $.ajax({
+                    url: "{U('Admin/adminset/action/addadmin')}",
+                    type: 'POST',
+                    data:'username='+$('#input-username').val()+
+                         '&password='+$('#input-password').val()+
+                         '&email='+$('#input-email').val(),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        // alert('添加成功!');
+                        location.reload();
+                    }
+                    });
+                });
+                //删除管理员
+                $(".btn-delAdmin").click(function(){
+                    $.ajax({
+                    url: "{U('Admin/adminset/action/deladmin')}",
+                    type: 'GET',
+                    data:'adminid='+$(this).attr("admin-id"),
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        // alert('添加成功!');
+                        location.reload();
+                    }
+                    });
+                });
+            })
+            //-->
+        </script>
+{include file="Admin/include/footer.html"}

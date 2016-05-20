@@ -1,0 +1,18 @@
+        <div class="sidebar">
+            <ul class="nav nav-stacked nav-sidebar">
+                <li><a href="{U('Admin/index')}"><span class="glyphicon glyphicon-stats"></span> 系统信息</span></a></li>
+                <li><a href="{U('Admin/siteset')}"><span class="glyphicon glyphicon-cog"></span> 站点设置</span></a></li>
+                <li><a href="{U('Admin/adminset')}"><span class="glyphicon glyphicon-king"></span> 管理设置</a></li>
+                <li><a href="{U('Admin/user')}"><span class="glyphicon glyphicon-user"></span> 用户管理</a></li>
+                <li><a href="{U('Admin/classify')}"><span class="glyphicon glyphicon-th"></span> 商品分类</a></li>
+                <li><a href="{U('Admin/goods')}"><span class="glyphicon glyphicon-gift"></span> 商品管理</a></li>
+                <li><a href="{U('Admin/order')}"><span class="glyphicon glyphicon-list-alt"></span> 订单管理</a></li>
+                <li><a href="{U('Admin/comment')}"><span class="glyphicon glyphicon-comment"></span> 评论管理</a></li>
+                <!-- <li><a href="{U('Admin/nav')}"><span class="glyphicon glyphicon-tasks"></span> 导航管理</a></li> -->
+                <!-- <li><a href="{U('Admin/brands')}"><span class="glyphicon glyphicon-sunglasses"></span> 品牌专题</a></li> -->
+            </ul>
+        </div>
+        <script type="text/javascript">
+            var navli=document.getElementsByTagName('ul')[3].getElementsByTagName('li');
+            navli[{$activeid}-1].setAttribute('class', 'active');
+        </script>

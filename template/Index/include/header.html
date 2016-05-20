@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8" />
+    <title>{$siteInfo.sitetitle}{$siteInfo.sitetitle2}</title>
+    <meta name="keywords" content="{$siteInfo.seokeywords}" />
+    <meta name="description" content="{$siteInfo.seodescription}" />
+    <link rel="shortcut icon" href="{TPL_PATH}/Index/images/favicon.png">
+    <link rel="stylesheet" type="text/css" href="{TPL_PATH}/Index/css/index.css">
+    <script src="{TPL_PATH}/Admin/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        function userFrame(frame,state){
+            obj=document.getElementById(frame+'Frame');
+            switch(state){
+                case 'show':
+                    obj.style.display='block';
+                    document.getElementById(frame[0]+'-username').focus();
+                    verifyChange(frame);
+                    break;
+                case 'hide':
+                    obj.style.display='none';
+                    break;
+            }
+        }
+        //验证码切换
+        function verifyChange(frame){
+            document.getElementById(frame+'-verify-img').setAttribute('src',"{U('Common/verify/r/')}"+Math.random()+'.png');
+        }
+        //返回顶部
+        function returnTop(){
+            $('body,html').animate({
+                scrollTop:0
+            },1000); 
+        }
+
+        function checkForm(action,data){
+            if(data==''){
+                $("#tip-"+action).html($("#tip-"+action).attr("data-default-tip"));
+                return 0;
+            }
+            $.ajax({
+            url: "{U('Api/checkform')}",
+            type: 'GET',
+            data:'action='+action+'&data='+data,
+            dataType: 'html',
+            timeout: 1000,
+            success: function(html){
+                $("#tip-"+action).html(html);
+            }
+            });
+        }
+
+        function checkLoginVerify(data){
+            if(data==''){
+                $("#tip-verify-login").html($("#tip-verify-login").attr("data-default-tip"));
+                return 0;
+            }
+            $.ajax({
+            url: "{U('Api/checkform')}",
+            type: 'GET',
+            data:'action=verify'+'&data='+data,
+            dataType: 'html',
+            timeout: 1000,
+            success: function(html){
+                $("#tip-verify-login").html(html);
+            }
+            });
+        }
+
+        function checkPass(pass){
+            if(pass==''){
+                $("#tip-password2").html($("#tip-password2").attr("data-default-tip"));
+                return 0;
+            }
+            if(pass!=$("#r-password").val()){
+                $("#tip-password2").html('<font color="red">两次密码输入不一致！</font>');
+            }else{
+                $("#tip-password2").html('<font color="#89D92B">恭喜，密码可用！</font>');
+            }
+        }
+
+        function addCart(id,num){
+            $.ajax({
+            url: "{U('Index/shopcart/action/add')}",
+            type: 'GET',
+            data:'id='+id+'&num='+num,
+            dataType: 'html',
+            timeout: 1000,
+            success: function(html){
+            }
+            });
+        }
+        function setCart(id,num){
+            $.ajax({
+            url: "{U('Index/shopcart/action/set')}",
+            type: 'GET',
+            data:'id='+id+'&num='+num,
+            dataType: 'html',
+            timeout: 1000,
+            success: function(html){
+            }
+            });
+        }
+    </script>
+</head>
+<body>
+        <div class="userFrame" id="loginFrame">
+            <div class="userFrame-bg" onclick="userFrame('login','hide')"></div>
+            <div class="panel" style="margin-top: 100px;">
+                <div class="hd">
+                    <div class="title">
+                        <span>欢迎登录360商城</span> 
+                    </div>
+                    <div class="close" onclick="userFrame('login','hide')"></div>
+                </div>
+                <div class="bd">
+                    <form action="{U('index/login')}" method="post">
+                        <p>
+                            <label for="l-username">帐&nbsp;&nbsp;&nbsp;号</label>
+                            <span class="input-bg"><input type="text" name="username" placeholder="请输入您的用户名" id="l-username"></span>
+                        </p>
+                        <p>
+                            <label for="l-password">密&nbsp;&nbsp;&nbsp;码</label>
+                            <span class="input-bg"><input type="password" name="password" maxlength="20" placeholder="请输入您的密码" id="l-password"></span>
+                        </p>
+                        <p>
+                            <label for="l-verify-input">验证码</label>
+                            <span class="input-bg" id="verify-span"><input type="text" name="verify" maxlength="7" placeholder="请输入验证码" class="verify-input" id="l-verify-input" autocomplete="off" onkeyup="checkLoginVerify(this.value)"></span>
+                            <img id='login-verify-img' src="" onclick="verifyChange('login');">
+                            <span class="tip" id="tip-verify-login" data-default-tip=""></span>
+                        </p>
+                        <p style="padding-left:65px;" id="autologin">
+                            <label><input type="checkbox" name="autologin" checked="checked">下次自动登录</label>
+                        </p>
+                        <p style="padding-left:65px;">
+                            <input type="submit" value="登录">
+                        </p>
+                    </form>
+                </div>
+                <div class="ft">
+                    <a href="javascript:userFrame('login','hide');userFrame('register','show')" class="linkblue">注册新账号</a><a href="" class="linkblue">忘记密码?</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="userFrame" id="registerFrame">
+            <div class="userFrame-bg" onclick="userFrame('register','hide')"></div>
+            <div class="panel" style="margin-top: 20px;">
+                <div class="hd">
+                    <div class="title">
+                        <span>欢迎注册360商城</span> 
+                    </div>
+                    <div class="close" onclick="userFrame('register','hide')"></div>
+                </div>
+                <div class="bd">
+                    <form action="{U('index/register')}" method="post">
+                        <p>
+                            <label for="r-username">用户名</label>
+                            <span class="input-bg"><input required type="text" name="username" minlength="2" maxlength="14" id="r-username" onkeyup="checkForm('username',this.value)"></span>
+                            <span class="tip" id="tip-username" data-default-tip="2-14个字符：英文、数字或中文">2-14个字符：英文、数字</span>
+                        </p>
+                        <p>
+                            <label for="r-email">邮&nbsp;&nbsp;&nbsp;箱</label>
+                            <span class="input-bg"><input required type="text" name="email" maxlength="30" id="r-email" onkeyup="checkForm('email',this.value)"></span>
+                            <span class="tip" id="tip-email" data-default-tip="请输入您的常用邮箱">请输入您的常用邮箱</span>
+                        </p>
+                        <p>
+                            <label for="r-password">密&nbsp;&nbsp;&nbsp;码</label>
+                            <span class="input-bg"><input required type="password" name="password" minlength="6" maxlength="20" id="r-password" onkeyup="checkForm('password',this.value)"></span>
+                            <span class="tip" id="tip-password" data-default-tip="6-20个字符(区分大小写)">6-20个字符</span>
+                        </p>
+                        <p>
+                            <label for="r-password2">确&nbsp;&nbsp;&nbsp;认</label>
+                            <span class="input-bg"><input required type="password" name="password2" minlength="6" maxlength="20" id="r-password2" onkeyup="checkPass(this.value)" ></span>
+                            <span class="tip" id="tip-password2" data-default-tip="请再次输入密码">请再次输入密码</span>
+                        </p>
+                        <p>
+                            <label for="r-verify-input">验证码</label>
+                            <span class="input-bg" id="verify-span"><input required type="text" name="verify" maxlength="7" placeholder="请输入验证码" class="verify-input" id="r-verify-input" autocomplete="off" onkeyup="checkForm('verify',this.value)"></span>
+                            <img id='register-verify-img' src="" onclick="verifyChange('register');">
+                            <span class="tip" id="tip-verify" data-default-tip="请输入图中的字母或数字，不区分大小写">请输入图中的字母或数字，不区分大小写</span>
+                        </p>
+                        <p style="padding-left:65px;">
+                            <input type="submit" value="登录">
+                        </p>
+                        <p style="padding-left:65px;" id="licence">
+                            <label><input type="checkbox" name="agree" checked="checked">我已经阅读并同意<a href="">《360用户服务条款》</a></label>
+                        </p>
+                    </form>
+                </div>
+                <div class="ft">
+                    已有账号,<a href="javascript:userFrame('register','hide');userFrame('login','show')" class="linkblue">立即登录</a><a href="" class="linkblue">忘记密码?</a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="header">
+            <div class="topbox">
+                <div class="contentwrap">
+                    <ul class="left-bar">
+                        <li><a href="{U('index/error')}">企业采购</a></li>
+                        <li><a href="{U('index/error')}">帮助中心</a></li>
+                        <li><a href="{U('index/error')}">收藏本站</a></li>
+                        <li><a href="{U('admin/index')}" target="_blank">后台入口</a></li>
+                    </ul>
+                    <ul class="right-bar">
+                    {if $loginInfo.loginstatus eq 1}
+                        <li id="select-user">
+                            <a href="#">{$loginInfo.username}</a>
+                            <ul>
+                                <li><a href="{U('index/user')}">个人中心</a></li>
+                                <li><a href="{U('index/user/action/order')}">我的订单</a></li>
+                                <li><a href="{U('index/logout')}">退出登录</a></li>
+                            </ul>
+                        </li>
+                    {/if}
+                    {if $loginInfo.loginstatus eq 0}
+                        <li><a href="javascript:void(0);" onclick="userFrame('login','show')">登录</a></li>
+                        <li><a href="javascript:void(0);" onclick="userFrame('register','show')">注册</a></li>
+                    {/if}
+                        <!-- <li><a href="#">我的订单</a></li> -->
+                        <li id="shopcart">
+                            <a href="{U('index/shopcart')}">
+                                <i></i>购物车<span class="cart-size">({count($cartList)})</span>
+                            </a>
+                            <div class="cart-info">
+                                {assign var="sum" value=0}
+                                {foreach from=$cartList key=k item=v}
+                                <div class="item">
+                                    <a href="{U('index/shopcart')}">
+                                        <img src="{$v.image}">
+                                        <span class="name">{$v.gname}</span>
+                                        <span class="number">{$v.num}</span>
+                                        <span class="price">¥{$v.price}</span>
+                                        <i></i>
+                                    </a>
+                                    {$sum=$sum+$v.num*$v.price}
+                                </div>
+                                {/foreach}
+                                <div class="count">
+                                    <a href="{U('index/shopcart')}">去购物车</a>
+                                    <span>共<b>{count($cartList)}</b>件商品<br>总计：<b>¥<i>{$sum}</i></b></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nav">
+                <div class="contentwrap">
+                    <div class="logo">
+                        <a href="{U('index/index')}"><img src="{TPL_PATH}/Index/images/logo.gif" /></a>
+                    </div>
+                    <ul class="navbar">
+                        {foreach from=$topGoods key=ks item=vs}
+                        <li>
+                            <a href="{U('index/allproduct/class_id/'|cat:{$vs[0]})}">{$ks}</a>
+                            <div class="sublist">
+                                <ul>
+                                    {foreach from=$vs[1] key=k item=v}
+                                    <li>
+                                        <a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank">
+                                            <img src="{$v.image}">
+                                            <span>{$v.gname}</span>
+                                            <i>{$v.price}元</i>
+                                        </a>
+                                    </li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                        </li>
+                        {/foreach}
+                    </ul>
+                    <div class="right-bar">
+                        <form action="" method="GET">
+                            <input type="hidden" name="m" value="Index">
+                            <input type="hidden" name="a" value="allproduct">
+                            <input type="submit" class="search-btn" value="">
+                            <input type="text" name="search" class="suggest" value="{if isset($search)}{$search}{/if}">
+                        </form>
+                        <!-- <img src="{TPL_PATH}/Index/images/t0123b81d5bd9c3ee73.png"> -->
+                    </div>
+                </div>
+            </div>
+        </div>

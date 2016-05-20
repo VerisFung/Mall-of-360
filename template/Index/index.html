@@ -1,0 +1,201 @@
+{include file='Index/include/header.html'}
+        <div class="banner">
+            <div class="contentwrap">
+                <ul class="navbar">
+                    <li class="n1">
+                        <a href="{U('index/allproduct')}">全部商品分类</a>
+                    </li>
+                    <li class="n2">
+                        <a href="#">手机及配件</a>
+                        <div class="sublist">
+                            <ul>
+                            {foreach from=$c1 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$c2 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$c3 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="n3">
+                        <a href="#">智能穿戴</a>
+                        <div class="sublist" style="width: 840px;">
+                            <ul>
+                            {foreach from=$d1 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$d2 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$d3 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="n4">
+                        <a href="#">智能家居</a>
+                        <div class="sublist">
+                            <ul>
+                            {foreach from=$e1 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$e2 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$e3 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="n5">
+                        <a href="#">智能车品</a>
+                        <div class="sublist" style="width: 840px;">
+                            <ul>
+                            {foreach from=$f1 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$f2 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$f3 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="n6">
+                        <a href="#">影音娱乐</a>
+                        <div class="sublist">
+                            <ul>
+                            {foreach from=$g1 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$g2 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$g3 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="n7">
+                        <a href="#">充电设备</a>
+                        <div class="sublist" style="width: 840px;">
+                            <ul>
+                            {foreach from=$h1 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$h2 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                            <ul>
+                            {foreach from=$h3 item=v}
+                                <li><a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank"><img src="{$v.image}">{$v.gname}</a></li>
+                            {/foreach}
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="slide">
+                    <li><a><img src="{TPL_PATH}/Index/images/banner/banner_2.jpg" alt="" /></a></li>
+                    <!--
+                    <li><a href="#"><img src="{TPL_PATH}/Index/images/banner/banner_1.jpg" alt="" /></a></li>
+                    <li><a href="#"><img src="{TPL_PATH}/Index/images/banner/banner_3.jpg" alt="" /></a></li>
+                    <li><a href="#"><img src="{TPL_PATH}/Index/images/banner/banner_4.jpg" alt="" /></a></li>
+                    <li><a href="#"><img src="{TPL_PATH}/Index/images/banner/banner_5.jpg" alt="" /></a></li>
+                    -->
+                </ul>
+            </div>
+        </div>
+        <div class="main">
+            <div class="contentwrap">
+                <div class="product">
+                    <div class="left">
+                        <a href="{U('index/product/id/34')}" target="_blank"><img src="{TPL_PATH}/Index/images/product/t014bb50eca8d6529ab.jpg" alt="" /></a>
+                    </div>
+                    <ul class="right">
+                        <li><a href="{U('index/product/id/74')}" target="_blank"><img src="{TPL_PATH}/Index/images/product/t01d29a4d46449026da.jpg" alt="" /></a></li>
+                        <li><a href="{U('index/product/id/45')}" target="_blank"><img src="{TPL_PATH}/Index/images/product/t01234c379004bbb8e4.jpg" alt="" /></a></li>
+                        <li><a href="{U('index/product/id/73')}" target="_blank"><img src="{TPL_PATH}/Index/images/product/t018576461cce622379.jpg" alt="" /></a></li>
+                        <li><a href="{U('index/product/id/39')}" target="_blank"><img src="{TPL_PATH}/Index/images/product/t011f75b998d004a27a.jpg" alt="" /></a></li>
+                        <li><a href="{U('index/product/id/46')}" target="_blank"><img src="{TPL_PATH}/Index/images/product/t0186ccd41213fde669.jpg" alt="" /></a></li>
+                        <li><a href="{U('index/product/id/43')}" target="_blank"><img src="{TPL_PATH}/Index/images/product/t019d905ae8d34997b2.jpg" alt="" /></a></li>
+                    </ul>
+                </div>
+                <div class="product">
+                    <span class="title">人气新品</span>
+                    <div class="left">
+                        <a href="{U('index/product/id/40')}" target="_blank"><img src="{TPL_PATH}/Index/images/product/t01001623a24cdb0827.jpg" alt="" /></a>
+                    </div>
+                    <ul class="default">
+                        {foreach from=$newGoods item=v}
+                        <li>
+                            <a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank">
+                                <p class="info">
+                                    <span class="ptitle">{$v.gname}</span>
+                                    <span class="pinfo">{$v.description}</span>
+                                    <i class="pprice">{$v.price}元</i>
+                                </p>
+                                <span class="pic">
+                                    <img src="{$v.image}">
+                                </span>
+                            </a>
+                        </li>
+                        {/foreach}
+                    </ul>
+                </div>
+                <div class="product">
+                    <span class="title">热销推荐</span>
+                    <div class="left">
+                        <a href="{U('index/product/id/72')}" target="_blank"><img src="{TPL_PATH}/Index/images/product/t013e9b9ef821efb124.jpg" alt="" /></a>
+                    </div>
+                    <ul class="default">
+                        {foreach from=$hotGoods item=v}
+                        <li>
+                            <a href="{U('index/product/id/'|cat:{$v.id})}" target="_blank">
+                                <p class="info">
+                                    <span class="ptitle">{$v.gname}</span>
+                                    <span class="pinfo">{$v.description}</span>
+                                    <i class="pprice">{$v.price}元</i>
+                                </p>
+                                <span class="pic">
+                                    <img src="{$v.image}">
+                                </span>
+                            </a>
+                        </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+        </div>
+{include file='Index/include/footer.html'}

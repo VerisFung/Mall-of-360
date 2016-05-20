@@ -1,0 +1,117 @@
+{include file='Index/include/header.html'}
+        <div class="main">
+            <div class="contentwrap">
+                <div class="leftcon">
+                    <ul>
+                        <span>个人中心</span>
+                        <li><a href="{U('index/user')}">个人信息</a></li>
+                        <li><a href="{U('index/user/action/order')}" class="cur">我的订单</a></li>
+                    </ul>
+                    <ul>
+                        <span>消息中心</span>
+                        <li><a href="{U('index/error')}">评论通知</a></li>
+                        <li><a href="{U('index/error')}">站内消息</a></li>
+                    </ul>
+                    <ul>
+                        <span>售后服务</span>
+                        <li><a href="{U('index/error')}">退货记录</a></li>
+                        <li><a href="{U('index/error')}">换货记录</a></li>
+                    </ul>
+                </div>
+                <div class="rightcon">
+                    <form action="{U('index/user/action/save')}" method="POST" enctype="multipart/form-data">
+                    <div class="con">
+                        {if count($orderList)==0}
+                            <div>暂无订单数据</div>
+                        {/if}
+                        {foreach from=$orderList item=v}
+                        <table border="0" cellspacing="0" class="table-user-order" {if $v.ostatus==3}style="opacity:0.6"{/if}>
+                            <thead>
+                                <tr style="height:30px;color:#333;background-color: #eee;">
+                                    <th style="width:80px;">订单号</th>
+                                    <td style="width:220px;">{$v.num}</td>
+                                    <th style="width:50px;">姓名</th>
+                                    <td style="width:60px;">{$v.oname}</td>
+                                    <th style="width:50px;">手机</th>
+                                    <td style="width:100px;">{$v.phone}</td>
+                                    <th style="width:50px;">地址</th>
+                                    <td style="width:200px;">{$v.address}</td>
+                                    <th style="width:50px;">总价</th>
+                                    <td style="width:50px;">{$v.allprice}</td>
+                                    <th style="width:50px;">状态</th>
+                                    <td style="width:100px;color:green;font-weight: bold">
+                                    <input type="hidden" class="order_id" value="{$v.id}"/>
+                                    {if $v.ostatus==0}未发货{/if}
+                                    {if $v.ostatus==1}已发货{/if}
+                                    {if $v.ostatus==2}已完成{/if}
+                                    {if $v.ostatus==3}已失效{/if}
+                                    </td>
+                                    <td style="width:100px;">
+                                    {if $v.ostatus==0}
+                                    <a style="color:red;text-decoration: underline" href="javascript:void(0);" onclick="cancleOrder({$v.id})">取消订单</a>
+                                    {/if}
+                                    {if $v.ostatus==1}
+                                    <a style="color:red;text-decoration: underline" href="javascript:void(0);" onclick="comfirmOrder({$v.id})">确认收货</a>
+                                    {/if}
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {foreach from=$orderGoodsList[$v.id] item=g}
+                                <tr style="height:50px">
+                                    <td colspan="1"><a href="{U('index/product/id/'|cat:{$g.id})}" target="_blank"><img src="{$g.iname}" alt=""></a></td>
+                                    <td colspan="6"><a href="{U('index/product/id/'|cat:{$g.id})}" target="_blank">{$g.gname}</a></td>
+                                    <th colspan="1">单价：</th>
+                                    <td colspan="1">{$g.price}</td>
+                                    <th colspan="2">数量：</th>
+                                    <td colspan="1">{$g.qty}</td>
+                                    <td colspan="1">
+                                    {if $v.ostatus==2}
+                                    <a style="color:red;text-decoration: underline" href="{U('index/product/id/'|cat:{$g.id})}#msg">立即评价</a>
+                                    {/if}
+                                    </td>
+                                </tr>
+                                {/foreach}
+                            </tbody>
+                        </table>
+                        {/foreach}
+                        <div class="clear"></div>
+                    </div>
+
+                    </form>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function cancleOrder(id){
+                if(confirm("确定要取消该订单吗？")){
+                    $.ajax({
+                    url: "{U('index/user/action/cancleorder')}",
+                    type: 'GET',
+                    data:'id='+id,
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        alert('取消订单成功!');
+                        location.reload();
+                    }
+                    });
+                }
+            }
+            function comfirmOrder(id){
+                if(confirm("是否确认收货吗？")){
+                    $.ajax({
+                    url: "{U('index/user/action/comfirmorder')}",
+                    type: 'GET',
+                    data:'id='+id,
+                    dataType: 'html',
+                    timeout: 1000,
+                    success: function(html){
+                        location.reload();
+                    }
+                    });
+                }
+            }
+        </script>
+{include file='Index/include/footer.html'}
