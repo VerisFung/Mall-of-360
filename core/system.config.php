@@ -110,7 +110,10 @@
     if(dirname($_SERVER['SCRIPT_FILENAME'])==$_SERVER['DOCUMENT_ROOT']){
         define('APP_NAME','');
     } else{
-        define('APP_NAME',substr(dirname($_SERVER['SCRIPT_FILENAME']),strlen($_SERVER['DOCUMENT_ROOT'])-1));
+        $dir_root=rtrim($_SERVER['DOCUMENT_ROOT'],'/');
+        $cur_root=dirname($_SERVER['SCRIPT_FILENAME']);
+        $l=strlen($dir_root);
+        define('APP_NAME',substr($cur_root,$l));
     }
 
     //模板目录名称
